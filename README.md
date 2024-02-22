@@ -1,7 +1,3 @@
-# Vue 3 + Vite
+# GuitarLA - Carro de compras
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+El Primer proyecto del curso, haremos un carrito de compras para una tienda de guitarras, el usuario puede añadir guitarras, cambiar sus cantidades, eliminarlas, veremos como calcular el total con un computed property y aprenderás sobre State, Single File Components, Eventos y Emits, props, watches y mucho más!
