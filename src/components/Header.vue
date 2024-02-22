@@ -1,5 +1,24 @@
 <script setup>
+import { computed } from 'vue'
+// props
+const props = defineProps({
+	car: {
+		type: Array,
+		require: true
+	},
+	guitar: {
+		type: Object,
+		require: true
+	}
+})
 
+// events
+defineEmits(['add-to-car', 'clean-car', 'quantity-decrement', 'quantity-increment', 'delete-product'])
+
+// computed
+const totalToPay = computed(() => {
+	return props.car.reduce((total, product) => total + (product.cantidad * product.precio), 0)
+})
 </script>
 
 <template>
@@ -14,66 +33,67 @@
 				<nav class="col-md-6 a mt-5 d-flex align-items-start justify-content-end">
 					<div class="carrito">
 						<img class="img-fluid" src="/img/carrito.png" alt="imagen carrito" />
-
 						<div id="carrito" class="bg-white p-3">
-							<p class="text-center">El carrito esta vacio</p>
-							<table class="w-100 table">
-								<thead>
-									<tr>
-										<th>Imagen</th>
-										<th>Nombre</th>
-										<th>Precio</th>
-										<th>Cantidad</th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>
-											<img class="img-fluid" src="/img/guitarra_02.jpg" alt="imagen guitarra">
-										</td>
-										<td>SRV</td>
-										<td class="fw-bold">
-											$299
-										</td>
-										<td class="flex align-items-start gap-4">
-											<button type="button" class="btn btn-dark">
-												-
-											</button>
-											1
-											<button type="button" class="btn btn-dark">
-												+
-											</button>
-										</td>
-										<td>
-											<button class="btn btn-danger" type="button">
-												X
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-
-							<p class="text-end">Total pagar: <span class="fw-bold">$899</span></p>
-							<button class="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
+							<p v-if="car.length === 0" class="text-center">El carrito esta vacio</p>
+							<div v-else>
+								<table class="w-100 table">
+									<thead>
+										<tr>
+											<th>Imagen</th>
+											<th>Nombre</th>
+											<th>Precio</th>
+											<th>Cantidad</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="product in car">
+											<td>
+												<img class="img-fluid" :src="'/img/' + product.imagen + '.jpg'"
+													:alt="'imagen guitarra ' + product.nombre">
+											</td>
+											<td>{{ product.nombre }}</td>
+											<td class="fw-bold">
+												$ {{ product.precio }}
+											</td>
+											<td class="flex align-items-start gap-4">
+												<button type="button" class="btn btn-dark"
+													@click="$emit('quantity-decrement', product.id)">
+													-
+												</button>
+												{{ product.cantidad }}
+												<button type="button" class="btn btn-dark"
+													@click="$emit('quantity-increment', product.id)">
+													+
+												</button>
+											</td>
+											<td>
+												<button @click="$emit('delete-product', product.id)" class="btn btn-danger"
+													type="button">
+													X
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<p class="text-end">Total pagar: <span class="fw-bold">$ {{ totalToPay }}</span></p>
+								<button @click="$emit('clean-car')" class="btn btn-dark w-100 mt-3 p-2">Vaciar
+									Carrito</button>
+							</div>
 						</div>
 					</div>
 				</nav>
 			</div><!--.row-->
-
 			<div class="row mt-5">
 				<div class="col-md-6 text-center text-md-start pt-5">
-					<h1 class="display-2 fw-bold">Modelo VAI</h1>
-					<p class="mt-5 fs-5 text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus,
-						possimus
-						quibusdam dolor nemo velit quo, fuga omnis, iure molestias optio tempore sint at ipsa dolorum odio
-						exercitationem eos inventore odit.</p>
-					<p class="text-primary fs-1 fw-black">$399</p>
-					<button type="button" class="btn fs-4 bg-primary text-white py-2 px-5">Agregar al Carrito</button>
+					<h1 class="display-2 fw-bold">Modelo {{ guitar.nombre }}</h1>
+					<p class="mt-5 fs-5 text-white">{{ guitar.descripcion }}</p>
+					<p class="text-primary fs-1 fw-black">$ {{ guitar.precio }}</p>
+					<button @click="$emit('add-to-car', guitar)" type="button"
+						class="btn fs-4 bg-primary text-white py-2 px-5">Agregar al Carrito</button>
 				</div>
 			</div>
 		</div>
-
 		<img class="header-guitarra" src="/img/header_guitarra.png" alt="imagen header">
 	</header>
 </template>
